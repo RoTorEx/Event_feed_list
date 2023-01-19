@@ -1,10 +1,21 @@
 .ONESHELL:
 py := poetry run
 django := $(py) python manage.py
+main_dir := ./
+
+code_dir = $(main_dir)
 
 
 hello:
 	@echo "Hello! Please look for doc and entry correct argument after 'make'."
+
+# Linters
+.PHONY: lint
+lint:
+	@$(py) isort $(code_dir)
+	@$(py) black $(code_dir)
+	@$(py) flake8 $(code_dir)
+	@$(py) mypy $(code_dir)
 
 # Make migrations and apply thay
 .PHONY: migrate

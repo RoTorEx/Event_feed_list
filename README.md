@@ -39,4 +39,7 @@ make flush
 
 ## Only fill database
 make fill
+
+## Run linters, formatters and code analysers
+make lint
 ```
