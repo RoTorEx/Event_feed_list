@@ -1,11 +1,21 @@
 # Django newsline app
 
+Command order to start project:
 ```zsh
-# Choose directory in terminal Django_newsline
+# Main flow
+## Make migrations
+make migrate
 
-# Run env
-poetry shell
+## Clean database and again fill it
+make seed
 
-# Or run Django throgh Poetry
-poetry run python manage.py runserver
+## Run application
+make run
+
+# Other
+## Only clean database
+make flush
+
+## Only fill database
+make fill
 ```
