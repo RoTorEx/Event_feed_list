@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import User, Post, Achievement, Advertising
+from .models import Achievement, Advertising, Post, User
 
 
 @admin.register(User)
