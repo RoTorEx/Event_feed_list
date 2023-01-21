@@ -3,13 +3,27 @@
 
 ## Common
 
-There are 2 release branches and 1 main branch. So select project version (**release_1.0** or **release_2.0**).
+There are 2 release branches and 1 main branch. So select project version with `git checkout` (**release_1.0** or **release_2.0**).
+
+**WARNING!** Unfortunately, due to the different models in the **first** and **second** versions of the application before running the application on a new version you need to clear the database, delete migrations from the folder 'migrations' and re-run them.
+
+If this does not help you need to drop the database and try the steps above again.
 
 
 ## Setup PostgreSQL database
 
 ```zsh
+# Create database with params
 createdb -h localhost -p 5432 -U postgres event_wall
+
+# Connect to database and run psql env
+sudo -i -u postgres psql
+
+# List of databases (psql env)
+\l
+
+# Drop database (psql env)
+DROP DATABASE event_wall;
 ```
 
 
