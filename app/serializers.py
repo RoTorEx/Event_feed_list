@@ -3,36 +3,27 @@ from rest_framework import serializers
 from .models import Achievement, Advertising, Post, User
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "first_name", "last_name")
+
+
 class PostSerializer(serializers.ModelSerializer):
-    """Post serializer."""
+    user = UserSerializer()
 
     class Meta:
         model = Post
-        fields = ("title", "date_create", "content")
+        fields = ("id", "title", "body", "date_created", "user")
 
 
 class AchievementSerializer(serializers.ModelSerializer):
-    """Achievement serializer."""
-
     class Meta:
         model = Achievement
-        fields = ("title", "condition", "image")
-
-
-class UserSerializer(serializers.ModelSerializer):
-    """Nested user serializer with all events."""
-
-    post = PostSerializer(many=True)
-    achievement = AchievementSerializer(many=True)
-
-    class Meta:
-        model = User
-        fields = ("first_name", "last_name", "post", "achievement")
+        fields = ("id", "name", "conditions", "image")
 
 
 class AdvertisingSerializer(serializers.ModelSerializer):
-    """Advertising serializer."""
-
     class Meta:
         model = Advertising
-        fields = "__all__"  # ('title', 'content', 'image', 'url', 'date_create')
+        fields = ("id", "title", "description", "image", "link", "date_created")

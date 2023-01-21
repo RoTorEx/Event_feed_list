@@ -11,14 +11,14 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "date_create", "user")
-    ordering = ("-date_create",)
+    list_display = ("title", "date_created", "user")
+    ordering = ("-date_created",)
 
 
 @admin.register(Achievement)
 class AchievementAdmin(admin.ModelAdmin):
-    list_display = ("title", "condition", "user", "icon")
-    ordering = ("title",)
+    list_display = ("name", "conditions", "user", "icon")
+    ordering = ("name",)
 
     def icon(self, obj):
         """Small icon in admin."""
@@ -30,8 +30,8 @@ class AchievementAdmin(admin.ModelAdmin):
 
 @admin.register(Advertising)
 class AdvertisingAdmin(admin.ModelAdmin):
-    list_display = ("title", "url", "date_create", "icon")
-    ordering = ("-date_create",)
+    list_display = ("title", "link", "date_created", "icon")
+    ordering = ("-date_created",)
 
     def icon(self, obj):
         """Small icon in admin."""
