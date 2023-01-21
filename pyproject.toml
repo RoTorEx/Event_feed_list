@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "django_event_wall"
+name = "django_feed_line"
 version = "0.1.0"
 description = ""
 authors = ["Aleksey Strelkov <aleks.strel.8v@gmail.com>"]
@@ -48,4 +48,4 @@ strict = true  # Enables all optional error checking flags
 disallow_subclassing_any = false  # Disable error whenever a class subclasses a value of type Any
 ignore_missing_imports = true  # Suppresses error messages about imports that cannot be resolved
 follow_imports = "silent"  # How mypy follows imported modules
-exclude = ["versions"]
+exclude = ["versions", "migrations"]
