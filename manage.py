@@ -6,7 +6,7 @@ import sys
 import dotenv
 
 
-def main():
+def main() -> None:
     """Run administrative tasks."""
 
     dotenv.load_dotenv()  # Load values fron .env to Python Env

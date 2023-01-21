@@ -1,4 +1,7 @@
+from typing import Any
+
 from rest_framework.generics import ListAPIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,7 +15,7 @@ class UserDetailView(APIView):
     the feed will display the user himself, his notes and achievements, events are sorted
     by the time of creation, all advertisements are displayed."""
 
-    def get(self, request, pk):
+    def get(self, request: Request, pk: int) -> Response:
         user = User.objects.get(id=pk)
         return Response(
             {
@@ -28,13 +31,13 @@ class PostListView(ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> Any:
         """Override get_queryset to filter by user id."""
 
         post = Post.objects.filter(user_id=self.kwargs.get("pk")).order_by("-date_create")
         return post
 
-    def list(self, request, *args, **kwargs):
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Override to add ad output."""
 
         queryset = self.filter_queryset(self.get_queryset())
@@ -53,7 +56,7 @@ class PostListView(ListAPIView):
 class PostDetailView(APIView):
     """The conclusion of the post for the heading."""
 
-    def get(self, request, pk, title):
+    def get(self, request: Request, pk: int, title: str) -> Response:
         post = Post.objects.filter(user_id=pk, title=title)
         return Response(
             {"post": PostSerializer(post, many=True).data, "advertisings": get_advertising()}  # Output ad list
@@ -63,7 +66,7 @@ class PostDetailView(APIView):
 class AchievementListView(APIView):
     """Output a list of achievements for the user."""
 
-    def get(self, request, pk):
+    def get(self, request: Request, pk: int) -> Response:
         achievement = Achievement.objects.filter(user_id=pk)
         return Response(
             {

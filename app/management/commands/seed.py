@@ -1,5 +1,6 @@
 import random as r
 from os import listdir
+from typing import Any
 
 from django.contrib.auth.models import User as DefaultUser
 from django.core.management.base import BaseCommand
@@ -11,7 +12,7 @@ from app.models import Achievement, Advertising, Post, User
 class Command(BaseCommand):
     help = """Expanding the functionality of the basic app commands."""
 
-    def handle(self, *args, **options):
+    def handle(self, *args: Any, **options: Any) -> None:
         """Fill database."""
 
         # Create superusers
