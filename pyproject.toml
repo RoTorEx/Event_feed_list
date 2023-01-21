@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django_feed_line"
-version = "0.1.0"
+version = "2.0.0"
 description = ""
 authors = ["Aleksey Strelkov <aleks.strel.8v@gmail.com>"]
 
