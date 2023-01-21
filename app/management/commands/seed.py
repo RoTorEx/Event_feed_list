@@ -8,6 +8,12 @@ from django_seed import Seed
 from app.models import Achievement, Advertising, Post, User
 
 
+USER = r.randint(2, 3)
+POST = r.randint(4, 10)
+ACHIEVEMENT = r.randint(2, 6)
+ADVERTISING = r.randint(1, 3)
+
+
 class Command(BaseCommand):
     help = """Expanding the functionality of the basic app commands."""
 
@@ -21,12 +27,10 @@ class Command(BaseCommand):
 
         seeder = Seed.seeder()
 
-        seeder.add_entity(User, r.randint(2, 3))
-        # seeder.add_entity(Post, r.randint(5, 8))
-        seeder.add_entity(Post, r.randint(10, 15))
-        # seeder.add_entity(Achievement, r.randint(2, 5))
-        seeder.add_entity(Achievement, r.randint(20, 30))
-        seeder.add_entity(Advertising, r.randint(1, 3))
+        seeder.add_entity(User, USER)
+        seeder.add_entity(Post, POST)
+        seeder.add_entity(Achievement, ACHIEVEMENT)
+        seeder.add_entity(Advertising, ADVERTISING)
 
         seeder.execute()
 
