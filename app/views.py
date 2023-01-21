@@ -1,6 +1,9 @@
+from typing import Optional
+
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from .models import Achievement, Advertising, Post, User
@@ -50,20 +53,20 @@ class FeedViewSet(viewsets.ViewSet):
 
     pagination_class = PageNumberPagination
 
-    def list(self, request, user_id=None):
+    def list(self, request: Request, user_id: Optional[int] = None) -> Response:
         posts = Post.objects.filter(user_id=user_id)
         posts_serializer = PostSerializer(posts, many=True)
         achievements = Achievement.objects.filter(user_id=user_id)
         achievements_serializer = AchievementSerializer(achievements, many=True)
         ads = Advertising.objects.all()
         ads_serializer = AdvertisingSerializer(ads, many=True)
-        event_type = self.request.query_params.get('event_type', None)
+        event_type = self.request.query_params.get("event_type", None)
 
         match event_type:
             case "post":
                 return Response(posts_serializer.data)
 
-            case 'achievement':
+            case "achievement":
                 return Response(achievements_serializer.data)
 
             case "advertising":

@@ -1,5 +1,7 @@
+from typing import Union
+
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django.utils.safestring import SafeString, mark_safe
 
 from .models import Achievement, Advertising, Post, User
 
@@ -20,7 +22,7 @@ class AchievementAdmin(admin.ModelAdmin):
     list_display = ("name", "conditions", "user", "icon")
     ordering = ("name",)
 
-    def icon(self, obj):
+    def icon(self, obj: Achievement) -> Union[SafeString, str]:
         """Small icon in admin."""
         if obj.image:
             return mark_safe("<img src='{}' width='60' />".format(obj.image.url))
@@ -33,7 +35,7 @@ class AdvertisingAdmin(admin.ModelAdmin):
     list_display = ("title", "link", "date_created", "icon")
     ordering = ("-date_created",)
 
-    def icon(self, obj):
+    def icon(self, obj: Achievement) -> Union[SafeString, str]:
         """Small icon in admin."""
         if obj.image:
             return mark_safe("<img src='{}' width='60' />".format(obj.image.url))

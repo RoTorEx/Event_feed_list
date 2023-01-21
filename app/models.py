@@ -8,7 +8,7 @@ class User(models.Model):
     first_name = models.CharField(max_length=64, verbose_name="First name")
     last_name = models.CharField(max_length=64, verbose_name="Second name")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"User: {self.first_name} {self.last_name}"
 
     class Meta:
@@ -24,8 +24,8 @@ class Post(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="post")
 
-    def __str__(self):
-        return self.title
+    def __str__(self) -> str:
+        return f"{self.title}"
 
     class Meta:
         verbose_name = "Post"
@@ -41,8 +41,8 @@ class Achievement(models.Model):
     image = models.ImageField(upload_to="achievement_image", verbose_name="Image")
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="achievement")
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return f"{self.name}"
 
     class Meta:
         verbose_name = "Achievement"
@@ -59,8 +59,8 @@ class Advertising(models.Model):
     link = models.URLField(max_length=1024)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.title
+    def __str__(self) -> str:
+        return f"{self.title}"
 
     class Meta:
         verbose_name = "Advertising"
