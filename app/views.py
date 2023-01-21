@@ -1,73 +1,79 @@
-from rest_framework.generics import ListAPIView
+from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .models import Achievement, Post, User
-from .serializers import AchievementSerializer, PostSerializer, UserSerializer
-from .utilities import get_advertising
+from .models import Achievement, Advertising, Post, User
+from .serializers import AchievementSerializer, AdvertisingSerializer, PostSerializer, UserSerializer
 
 
-class UserDetailView(APIView):
-    """Output the user's feed on a get request with the user id in the request
-    the feed will display the user himself, his notes and achievements, events are sorted
-    by the time of creation, all advertisements are displayed."""
+class UserViewSet(viewsets.ModelViewSet):
+    """View return list of all users."""
 
-    def get(self, request, pk):
-        user = User.objects.get(id=pk)
-        return Response(
-            {
-                "user": UserSerializer(user).data,  # Output users's neews feed
-                "advertisings": get_advertising(),  # Output neews feed
-            }
-        )
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["first_name", "last_name"]
 
 
-class PostListView(ListAPIView):
-    """Output a list of posts for the user with the id passed in the get request"""
+class PostViewSet(viewsets.ReadOnlyModelViewSet):
+    """View return list of all posts."""
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
-    def get_queryset(self):
-        """Override get_queryset to filter by user id."""
-
-        post = Post.objects.filter(user_id=self.kwargs.get("pk")).order_by("-date_create")
-        return post
-
-    def list(self, request, *args, **kwargs):
-        """Override to add ad output."""
-
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(
-                {"posts": serializer.data, "advertisings": get_advertising()}  # Output ad list
-            )
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response({"posts": serializer.data, "advertisings": get_advertising()})  # Output ad list
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["title", "body"]
+    ordering_fields = ["date_created"]
 
 
-class PostDetailView(APIView):
-    """The conclusion of the post for the heading."""
+class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
+    """View return list of all achievement."""
 
-    def get(self, request, pk, title):
-        post = Post.objects.filter(user_id=pk, title=title)
-        return Response(
-            {"post": PostSerializer(post, many=True).data, "advertisings": get_advertising()}  # Output ad list
-        )
+    queryset = Achievement.objects.all()
+    serializer_class = AchievementSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["name", "user"]
 
 
-class AchievementListView(APIView):
-    """Output a list of achievements for the user."""
+class AdvertisingViewSet(viewsets.ReadOnlyModelViewSet):
+    """View return list of all advertisements."""
 
-    def get(self, request, pk):
-        achievement = Achievement.objects.filter(user_id=pk)
-        return Response(
-            {
-                "achievements": AchievementSerializer(achievement, many=True).data,
-                "advertisings": get_advertising(),  # Output ad list
-            }
-        )
+    queryset = Advertising.objects.all()
+    serializer_class = AdvertisingSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["title", "description"]
+    ordering_fields = ["date_published"]
+
+
+class FeedViewSet(viewsets.ViewSet):
+    """Main view of feed list."""
+
+    pagination_class = PageNumberPagination
+
+    def list(self, request, user_id=None):
+        posts = Post.objects.filter(user_id=user_id)
+        posts_serializer = PostSerializer(posts, many=True)
+        achievements = Achievement.objects.filter(user_id=user_id)
+        achievements_serializer = AchievementSerializer(achievements, many=True)
+        ads = Advertising.objects.all()
+        ads_serializer = AdvertisingSerializer(ads, many=True)
+        event_type = self.request.query_params.get('event_type', None)
+
+        match event_type:
+            case "post":
+                return Response(posts_serializer.data)
+
+            case 'achievement':
+                return Response(achievements_serializer.data)
+
+            case "advertising":
+                return Response(ads_serializer.data)
+
+            case _:
+                return Response(
+                    {
+                        "posts": posts_serializer.data,
+                        "achievements": achievements_serializer.data,
+                        "advertising": ads_serializer.data,
+                    }
+                )
